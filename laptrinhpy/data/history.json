@@ -1,0 +1,290 @@
+[
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 355,
+        "path_length": 0,
+        "elapsed_sec": 0.000363,
+        "run_id": "RUN_0001",
+        "timestamp": "2026-10-09 18:58:59"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 470,
+        "path_length": 34,
+        "elapsed_sec": 0.000447,
+        "run_id": "RUN_0002",
+        "timestamp": "2026-10-09 18:59:12"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 350,
+        "path_length": 27,
+        "elapsed_sec": 0.000351,
+        "run_id": "RUN_0003",
+        "timestamp": "2026-10-09 18:59:42"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000368,
+        "run_id": "RUN_0004",
+        "timestamp": "2026-10-09 19:00:15"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000387,
+        "run_id": "RUN_0005",
+        "timestamp": "2026-10-09 19:00:30"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000354,
+        "run_id": "RUN_0006",
+        "timestamp": "2026-10-09 19:00:30"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.00035,
+        "run_id": "RUN_0007",
+        "timestamp": "2026-10-09 19:00:31"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000376,
+        "run_id": "RUN_0008",
+        "timestamp": "2026-10-09 19:00:31"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000355,
+        "run_id": "RUN_0009",
+        "timestamp": "2026-10-09 19:00:31"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000372,
+        "run_id": "RUN_0010",
+        "timestamp": "2026-10-09 19:00:31"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.00034,
+        "run_id": "RUN_0011",
+        "timestamp": "2026-10-09 19:00:31"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000336,
+        "run_id": "RUN_0012",
+        "timestamp": "2026-10-09 19:00:31"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000367,
+        "run_id": "RUN_0013",
+        "timestamp": "2026-10-09 19:00:32"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000335,
+        "run_id": "RUN_0014",
+        "timestamp": "2026-10-09 19:00:32"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000393,
+        "run_id": "RUN_0015",
+        "timestamp": "2026-10-09 19:00:32"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000346,
+        "run_id": "RUN_0016",
+        "timestamp": "2026-10-09 19:00:32"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000354,
+        "run_id": "RUN_0017",
+        "timestamp": "2026-10-09 19:00:32"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000347,
+        "run_id": "RUN_0018",
+        "timestamp": "2026-10-09 19:00:32"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000342,
+        "run_id": "RUN_0019",
+        "timestamp": "2026-10-09 19:00:33"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000362,
+        "run_id": "RUN_0020",
+        "timestamp": "2026-10-09 19:00:37"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000384,
+        "run_id": "RUN_0021",
+        "timestamp": "2026-10-09 19:00:37"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000357,
+        "run_id": "RUN_0022",
+        "timestamp": "2026-10-09 19:00:37"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000373,
+        "run_id": "RUN_0023",
+        "timestamp": "2026-10-09 19:00:37"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000387,
+        "run_id": "RUN_0024",
+        "timestamp": "2026-10-09 19:00:37"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000342,
+        "run_id": "RUN_0025",
+        "timestamp": "2026-10-09 19:00:37"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000419,
+        "run_id": "RUN_0026",
+        "timestamp": "2026-10-09 19:00:38"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000369,
+        "run_id": "RUN_0027",
+        "timestamp": "2026-10-09 19:00:38"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 378,
+        "path_length": 29,
+        "elapsed_sec": 0.000356,
+        "run_id": "RUN_0028",
+        "timestamp": "2026-10-09 19:00:38"
+    },
+    {
+        "username": "Sinhvien01",
+        "algorithm": "BFS",
+        "visited_count": 135,
+        "path_length": 24,
+        "elapsed_sec": 0.000145,
+        "run_id": "RUN_0029",
+        "timestamp": "2026-10-09 19:00:57"
+    },
+    {
+        "username": "sinhvien02",
+        "algorithm": "BFS",
+        "visited_count": 511,
+        "path_length": 25,
+        "elapsed_sec": 0.000554,
+        "run_id": "RUN_0030",
+        "timestamp": "2026-10-09 19:14:57"
+    },
+    {
+        "username": "sinhvien02",
+        "algorithm": "BFS",
+        "visited_count": 191,
+        "path_length": 23,
+        "elapsed_sec": 0.000389,
+        "run_id": "RUN_0031",
+        "timestamp": "2026-10-09 19:19:36"
+    },
+    {
+        "username": "sinhvien02",
+        "algorithm": "BFS",
+        "visited_count": 815,
+        "path_length": 47,
+        "elapsed_sec": 0.000752,
+        "run_id": "RUN_0032",
+        "timestamp": "2026-10-09 19:19:58"
+    }
+]

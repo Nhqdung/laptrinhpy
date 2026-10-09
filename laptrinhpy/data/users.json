@@ -1,0 +1,46 @@
+[
+    {
+        "user_id": "U001",
+        "username": "admin",
+        "email": "admin@gmail.com",
+        "phone": "0987654321",
+        "salt": "b13a076b1545199ee20982f5cbcc39b0",
+        "password_hash": "7d1ca672e01714c4c5e50e3afef1d0eac5c249811f1c094ba81c156ce296d633",
+        "failed_attempts": 0,
+        "lock_until": null,
+        "role": "admin",
+        "created_at": "2026-09-24 19:23:09",
+        "otp_code": null,
+        "otp_expiry": null
+    },
+    {
+        "user_id": "U002",
+        "username": "Sinhvien01",
+        "email": "thuthu0964324@gmail.com",
+        "phone": "0824082012",
+        "salt": "651dc94a4ec30cbc465b4da25c3a714f",
+        "password_hash": "3ea40a2fc91d0e65bd3c212f72b6415db407bedb91baec2978c36b8e45700e6a",
+        "failed_attempts": 0,
+        "lock_until": null,
+        "role": "user",
+        "created_at": "2026-10-09 18:57:51",
+        "otp_code": null,
+        "otp_expiry": null,
+        "is_verified": true
+    },
+    {
+        "user_id": "U003",
+        "username": "sinhvien02",
+        "email": "2001250117@huit.edu.vn",
+        "phone": "0234567891",
+        "salt": "1f45272589fd51da4f09d485d12a24c4",
+        "password_hash": "0ffec8a87679faee269c7ccc9b9422ce3808b68d143a2db388ffe135ccba4843",
+        "failed_attempts": 0,
+        "lock_until": null,
+        "role": "user",
+        "created_at": "2026-10-09 19:13:19",
+        "otp_code": null,
+        "otp_expiry": null,
+        "is_verified": true
+    }
+]
