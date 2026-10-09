@@ -1,0 +1,2 @@
+- Chạy pip install dotenv để tải thư viện về
+- đổi .env.example thành .env để dùng mail gửi về OTP
