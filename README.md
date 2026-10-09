@@ -1,3 +1,3 @@
 - Chạy pip install dotenv để tải thư viện về
 - đổi .env.example thành .env để dùng mail gửi về OTP
-- chạy trên Terminal, PowerShell `python main.py` để chạy app dùng `python test_data` để test dữ liệu data như yêu cầu đề tài
+- chạy trên Terminal, PowerShell `python main.py` để chạy app dùng `python test_data.py` để test dữ liệu data như yêu cầu đề tài
