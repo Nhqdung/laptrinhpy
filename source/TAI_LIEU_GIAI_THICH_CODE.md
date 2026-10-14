@@ -305,7 +305,7 @@ Dự án tích hợp sẵn bộ kiểm thử tự động toàn diện kiểm tr
 
 ---
 
-# 📊 BẢNG TỔNG KẾT NHANH ĐỂ TRẢ LỜI NHANH TRÊN LỚP
+# 📊 BẢNG TỔNG KẾT NHANH ĐỂ TRẢ LỜI NHANH TRÊN
 
 | Thành phần | Công nghệ / Thuật toán | Ưu điểm cốt lõi |
 | :--- | :--- | :--- |
