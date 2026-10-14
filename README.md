@@ -32,8 +32,7 @@ laptrinhpy/
 │   ├── algorithms/                   # Module thuật toán (BFS)
 │   ├── gui/                          # Giao diện đồ họa Tkinter (Canvas, Control panel, Windows)
 │   ├── services/                     # Dịch vụ xử lý JSON và External API
-│   ├── data/                         # Dữ liệu JSON gốc
-│   └── TAI_LIEU_GIAI_THICH_CODE.md   # TÀI LIỆU TOÀN DIỆN GIẢI THÍCH CODE & CÂU HỎI BẢO VỆ
+│   └── data/                         # Dữ liệu JSON gốc
 │
 ├── .gitignore                        # Loại bỏ file rác, cache khi đẩy lên Git
 └── README.md                         # Tài liệu giới thiệu dự án
