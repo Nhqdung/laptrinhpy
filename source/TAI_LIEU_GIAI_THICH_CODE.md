@@ -30,19 +30,26 @@ gui/
 * **`main_window.py`:**
   * Đóng vai trò là **Container trung tâm**, kết nối `GridCanvas`, `ControlPanel` và `DataManager`.
   * Quản lý trạng thái phiên làm việc (Session) của tài khoản đang đăng nhập (hiển thị tên người dùng ở góc trên, nút Đăng xuất).
-  * Xử lý luồng chuyển cảnh: Nếu chưa đăng nhập $\rightarrow$ mở `LoginWindow`; Đăng nhập thành công $\rightarrow$ mở khóa toàn bộ tính năng mô phỏng.
+  * Xử lý luồng chuyển cảnh: Nếu chưa đăng nhập → mở `LoginWindow`; Đăng nhập thành công → mở khóa toàn bộ tính năng mô phỏng.
 
 ---
 
 ### 1.2. `grid_canvas.py` (Lưới vẽ tương tác)
 * **Kế thừa:** `tk.Canvas`.
-* **Chuyển đổi tọa độ toán học $\leftrightarrow$ Tọa độ pixel màn hình:**
+* **Chuyển đổi tọa độ toán học ↔ Tọa độ pixel màn hình:**
   * Kích thước mỗi ô là `cell_size` (mặc định 25px đến 30px).
-  * Từ tọa độ pixel chuột $(x, y) \rightarrow$ Chỉ số ô:
-    $$\text{row} = \lfloor y / \text{cell\_size} \rfloor, \quad \text{col} = \lfloor x / \text{cell\_size} \rfloor$$
-  * Từ chỉ số ô $(\text{row}, \text{col}) \rightarrow$ Tọa độ hình chữ nhật vẽ trên Canvas:
-    $$x_1 = \text{col} \times \text{cell\_size}, \quad y_1 = \text{row} \times \text{cell\_size}$$
-    $$x_2 = x_1 + \text{cell\_size}, \quad y_2 = y_1 + \text{cell\_size}$$
+  * **Từ tọa độ pixel chuột `(x, y)` → Chỉ số ô `(row, col)`:**
+    ```python
+    row = y // cell_size
+    col = x // cell_size
+    ```
+  * **Từ chỉ số ô `(row, col)` → Tọa độ pixel hình chữ nhật vẽ trên Canvas:**
+    ```python
+    x1 = col * cell_size
+    y1 = row * cell_size
+    x2 = x1 + cell_size
+    y2 = y1 + cell_size
+    ```
 * **Xử lý sự kiện chuột (Mouse Event Binding):**
   * `<Button-1>` & `<B1-Motion>`: Nhấn và kéo chuột trái để **Vẽ tường chướng ngại vật** liên tục.
   * `<Button-3>` & `<B3-Motion>`: Nhấn và kéo chuột phải để **Xóa tường chướng ngại vật**.
@@ -64,7 +71,7 @@ gui/
   * **Thanh trượt tốc độ (Speed Slider):** Điều chỉnh độ trễ `delay` (từ 5ms đến 100ms) giữa các bước vẽ.
   * **Lưu / Tải bản đồ (Save/Load Map):** Mở hộp thoại nhập tên để lưu trạng thái mê cung vào CSDL JSON.
 * **⚡ Kỹ thuật hoạt ảnh không làm đơ giao diện (`root.after`):**
-  * **Vấn đề thường gặp:** Dùng vòng lặp `while True` kết hợp `time.sleep()` sẽ làm luồng giao diện (Main Thread) bị nghẽn $\rightarrow$ Cửa sổ báo "(Not Responding)", không bấm được Pause hay chuột.
+  * **Vấn đề thường gặp:** Dùng vòng lặp `while True` kết hợp `time.sleep()` sẽ làm luồng giao diện (Main Thread) bị nghẽn → Cửa sổ báo "(Not Responding)", không bấm được Pause hay chuột.
   * **Giải pháp trong code:** Sử dụng phương thức `root.after(delay_ms, self.step_animation)`. Mỗi lần chỉ tính toán và đổi màu đúng 1 bước duyệt của thuật toán, sau đó nhường quyền xử lý cho hệ điều hành vẽ màn hình, rồi hẹn lịch gọi bước tiếp theo.
 
 ---
@@ -72,8 +79,8 @@ gui/
 ### 1.4. `login_window.py` (Cửa sổ xác thực người dùng)
 * Thiết kế dạng giao diện hiện đại với **3 Tab / Chế độ:**
   1. **Đăng nhập (Sign In):** Nhập username & password.
-  2. **Đăng ký (Sign Up):** Nhập họ tên, email, SĐT, mật khẩu $\rightarrow$ Chuyển sang màn hình nhập **mã OTP 6 số**.
-  3. **Quên mật khẩu (Forgot Password):** Nhập email nhận OTP $\rightarrow$ Nhập mật khẩu mới.
+  2. **Đăng ký (Sign Up):** Nhập họ tên, email, SĐT, mật khẩu → Chuyển sang màn hình nhập **mã OTP 6 số**.
+  3. **Quên mật khẩu (Forgot Password):** Nhập email nhận OTP → Nhập mật khẩu mới.
 * Tự động hiển thị nhãn lỗi màu đỏ trực quan khi nhập sai dữ liệu (Validation feedback).
 
 ---
@@ -123,10 +130,10 @@ algorithms/
 #### A. Cấu trúc dữ liệu sử dụng:
 1. **Hàng đợi `queue = collections.deque()` (FIFO - First In, First Out):**
    * Chứa các ô đang chờ được duyệt tiếp theo.
-   * Sử dụng `deque` để thao tác lấy phần tử đầu `popleft()` đạt độ phức tạp $O(1)$ (nếu dùng `list.pop(0)` thông thường sẽ mất $O(N)$).
+   * Sử dụng `deque` để thao tác lấy phần tử đầu `popleft()` đạt độ phức tạp O(1) (nếu dùng `list.pop(0)` thông thường sẽ mất O(N)).
 2. **Tập hợp `visited = set()`:**
    * Lưu các tọa độ `(r, c)` đã được ghé thăm để tránh bị lặp vô tận.
-   * Tra cứu trong `set` mất thời gian $O(1)$.
+   * Tra cứu trong `set` mất thời gian O(1).
 3. **Từ điển cha-con `parent = {}` (Backtracking Map):**
    * Lưu lại ô đi trước của từng ô: `parent[neighbor] = current`.
    * Đây là cấu trúc quan trọng nhất để **truy vết ngược lại đường đi** sau khi đã chạm tới đích.
@@ -143,14 +150,14 @@ DIRECTIONS = [
 
 #### C. Các bước thực thi thuật toán:
 1. **Khởi tạo:**
-   * Đưa điểm xuất phát $S(\text{start\_row}, \text{start\_col})$ vào `queue`.
-   * Thêm $S$ vào `visited`.
+   * Đưa điểm xuất phát `S(start_row, start_col)` vào `queue`.
+   * Thêm `S` vào `visited`.
 2. **Trong mỗi bước (`step()`):**
    * Lấy ô hiện tại `(r, c)` ra khỏi đầu hàng đợi bằng `queue.popleft()`.
    * Nếu `(r, c) == target`: Đã tìm thấy đích! Dừng thuật toán và tiến hành truy vết.
    * Ngược lại, xét 4 ô lân cận `(nr, nc)`:
      * Điều kiện hợp lệ:
-       1. $0 \le nr < \text{Số hàng}$ và $0 \le nc < \text{Số cột}$ (nằm trong biên).
+       1. `0 <= nr < Số hàng` và `0 <= nc < Số cột` (nằm trong biên).
        2. Lưới tại `(nr, nc)` **không phải là tường** (Not a wall).
        3. `(nr, nc)` **chưa từng có trong `visited`**.
      * Nếu thỏa mãn cả 3 điều kiện:
@@ -165,10 +172,10 @@ DIRECTIONS = [
    * Thêm ô `start` vào cuối, sau đó đảo ngược danh sách `path.reverse()`.
 
 #### D. Độ phức tạp tính toán:
-* **Thời gian (Time Complexity):** $O(V + E)$
-  * Với lưới $R$ hàng, $C$ cột: Số đỉnh $V = R \times C$, số cạnh tối đa $E = 4 \times R \times C$.
-  * Do đó độ phức tạp là **tuyến tính $O(R \times C)$**. Mỗi ô chỉ được đưa vào hàng đợi tối đa 1 lần.
-* **Bộ nhớ (Space Complexity):** $O(R \times C)$ để lưu trữ `queue`, `visited` và `parent`.
+* **Thời gian (Time Complexity):** `O(V + E)`
+  * Với lưới `R` hàng, `C` cột: Số đỉnh `V = R * C`, số cạnh tối đa `E = 4 * R * C`.
+  * Do đó độ phức tạp là **tuyến tính O(R * C)**. Mỗi ô chỉ được đưa vào hàng đợi tối đa 1 lần.
+* **Bộ nhớ (Space Complexity):** `O(R * C)` để lưu trữ `queue`, `visited` và `parent`.
 
 ---
 
@@ -244,9 +251,9 @@ Hệ thống **tuyệt đối không lưu mật khẩu thô (Plaintext)**:
   * `failed_attempts`: Số lần gõ sai mật khẩu liên tiếp.
   * `lockout_until`: Thời điểm hết hạn khóa tài khoản.
 * **Quy tắc:**
-  * Nếu người dùng gõ sai mật khẩu **5 lần liên tiếp** $\rightarrow$ Hệ thống tự động khóa tài khoản trong **5 phút**.
+  * Nếu người dùng gõ sai mật khẩu **5 lần liên tiếp** → Hệ thống tự động khóa tài khoản trong **5 phút**.
   * Trong thời gian 5 phút này, dù có nhập đúng mật khẩu, hệ thống vẫn từ chối và báo rõ số phút còn phải chờ.
-  * Khi nhập đúng mật khẩu trước mốc 5 lần sai $\rightarrow$ Tự động reset `failed_attempts` về 0.
+  * Khi nhập đúng mật khẩu trước mốc 5 lần sai → Tự động reset `failed_attempts` về 0.
 
 ---
 
@@ -303,7 +310,7 @@ Dự án tích hợp sẵn bộ kiểm thử tự động toàn diện kiểm tr
 | Thành phần | Công nghệ / Thuật toán | Ưu điểm cốt lõi |
 | :--- | :--- | :--- |
 | **Giao diện** | Python Tkinter, Non-blocking Canvas | Trực quan, chạy mượt không giật lag nhờ `root.after()`. |
-| **Tìm đường** | BFS (Breadth-First Search), `deque` | Đảm bảo 100% luôn tìm được đường đi ngắn nhất với $O(R \times C)$. |
+| **Tìm đường** | BFS (Breadth-First Search), `deque` | Đảm bảo 100% luôn tìm được đường đi ngắn nhất với độ phức tạp `O(R * C)`. |
 | **Mở rộng code** | OOP, Factory Method Registry | Dễ dàng thêm thuật toán mới mà không cần chạm vào code giao diện. |
 | **Mật khẩu** | PBKDF2-HMAC-SHA256, 100.000 vòng, 16B Salt | Chống Rainbow Table, chống GPU Brute-force đạt chuẩn bảo mật cao. |
 | **An toàn tài khoản** | Khóa 5 phút khi sai 5 lần | Chống tấn công dò quét mật khẩu tự động. |
