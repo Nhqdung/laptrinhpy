@@ -1,0 +1,17 @@
+[
+    {
+        "user_id": "U001",
+        "username": "admin",
+        "email": "admin@gmail.com",
+        "phone": "0987654321",
+        "salt": "b13a076b1545199ee20982f5cbcc39b0",
+        "password_hash": "7d1ca672e01714c4c5e50e3afef1d0eac5c249811f1c094ba81c156ce296d633",
+        "failed_attempts": 0,
+        "lock_until": null,
+        "role": "admin",
+        "created_at": "2026-09-24 19:23:09",
+        "otp_code": null,
+        "otp_expiry": null,
+        "is_verified": true
+    }
+]
