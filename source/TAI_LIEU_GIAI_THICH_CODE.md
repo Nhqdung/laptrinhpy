@@ -1,196 +1,312 @@
-# TÀI LIỆU TOÀN DIỆN GIẢI THÍCH CODE & PHỤC VỤ THUYẾT TRÌNH BẢO VỆ ĐỒ ÁN
+# 📖 TÀI LIỆU TOÀN DIỆN GIẢI THÍCH CODE & THUYẾT TRÌNH BẢO VỆ ĐỒ ÁN
 
-> **Mục tiêu của tài liệu:** Cung cấp đầy đủ kiến thức về cấu trúc mã nguồn, luồng dữ liệu, thuật toán và các câu trả lời mẫu cho mọi câu hỏi phản biện của giảng viên khi đứng thuyết trình trên lớp.
+Tài liệu được phân chia rõ ràng thành **3 PHẦN TRỌNG TÂM** theo đúng kiến trúc của ứng dụng, giúp bạn dễ dàng tra cứu, trả lời câu hỏi và tự tin thuyết trình trước giảng viên và các bạn:
 
----
-
-## 📑 MỤC LỤC
-1. [Tổng Quan Kiến Trúc Dự Án (Architectural Overview)](#1-tổng-quan-kiến-trúc-dự-án)
-2. [Chi Tiết Từng Module & Tệp Tin](#2-chi-tiết-từng-module--tệp-tin)
-   - [2.1. main.py - Điểm khởi chạy (Entry Point)](#21-mainpy)
-   - [2.2. data_manager.py - Bộ xử lý nghiệp vụ & Bảo mật](#22-data_managerpy)
-   - [2.3. email_service.py - Tích hợp Dịch vụ Ngoài Gmail SMTP](#23-email_servicepy)
-   - [2.4. algorithms/ - Thuật toán tìm đường & Thiết kế mở rộng](#24-algorithms)
-   - [2.5. gui/ - Giao diện đồ họa Tkinter tương tác](#25-gui)
-   - [2.6. services/ - Tầng xử lý bổ trợ](#26-services)
-   - [2.7. test_data.py - Bộ 48 ca kiểm thử tự động](#27-test_datapy)
-3. [Giải Thích Sâu Về Các Thuật Toán Cốt Lõi](#3-giải-thích-sâu-về-các-thuật-toán-cốt-lõi)
-   - [3.1. Thuật toán BFS (Breadth-First Search) trên Lưới 2D](#31-thuật-toán-bfs-trên-lưới-2d)
-   - [3.2. Thuật toán Mã hóa Mật khẩu PBKDF2-HMAC-SHA256 & Salt](#32-thuật-toán-mã-hóa-mật-khẩu-pbkdf2)
-   - [3.3. Cơ chế Khóa Tài Khoản Chống Tấn Công Dò Quét (Brute-Force)](#33-cơ-chế-khóa-tài-khoản)
-   - [3.4. Kỹ thuật Lưu Trữ An Toàn Atomic File Write](#34-kỹ-thuật-lưu-trữ-an-toàn-atomic-write)
-4. [Kịch Bản Hỏi - Đáp (Q&A) Với Giảng Viên Trên Lớp](#4-kịch-bản-hỏi---đáp-qa-với-giảng-viên)
+* **PHẦN 1: GIAO DIỆN (GUI & TRỰC QUAN HÓA)**
+* **PHẦN 2: THUẬT TOÁN (TÌM ĐƯỜNG & MÔ PHỎNG LƯỚI)**
+* **PHẦN 3: DỮ LIỆU & TÀI KHOẢN (BẢO MẬT, OTP & JSON)**
 
 ---
 
-## 1. TỔNG QUAN KIẾN TRÚC DỰ ÁN
+# 🎨 PHẦN 1: GIAO DIỆN (GUI & TRỰC QUAN HÓA)
 
-Dự án áp dụng mô hình kiến trúc phân lớp hướng đối tượng (**Layered MVC Architecture**):
+Phần giao diện được xây dựng bằng thư viện chuẩn **Tkinter** của Python, nằm toàn bộ trong thư mục `gui/` và file điều phối `main.py`.
 
 ```text
-               +-----------------------------------+
-               |        GIAO DIỆN (VIEW)           |
-               |  (gui/login_window, main_window)  |
-               +-----------------+-----------------+
-                                 |  Bắt sự kiện (Events)
-                                 v
-               +-----------------------------------+
-               |     ĐIỀU KHIỂN (CONTROLLER)       |
-               |  (control_panel, algorithms/)     |
-               +-----------------+-----------------+
-                                 |  Gọi hàm nghiệp vụ
-                                 v
-               +-----------------------------------+
-               |       MÔ HÌNH DỮ LIỆU (MODEL)     |
-               |   (data_manager.py, services/)    |
-               +-----------------+-----------------+
-                                 |  Lưu trữ an toàn
-                                 v
-               +-----------------------------------+
-               |       LƯU TRỮ (PERSISTENCE)       |
-               |  (users.json, maps.json, history) |
-               +-----------------------------------+
+gui/
+├── main_window.py      # Cửa sổ chính tích hợp toàn bộ thành phần
+├── grid_canvas.py      # Lưới vẽ tương tác (vẽ tường, hiển thị ô duyệt)
+├── control_panel.py    # Thanh công cụ & nút bấm điều khiển
+├── login_window.py     # Cửa sổ Đăng nhập, Đăng ký & Quên mật khẩu (OTP)
+└── theme.py            # Quản lý bảng màu Dark Mode / Light Mode
 ```
 
-* **Tầng View (`gui/`)**: Chịu trách nhiệm hiển thị giao diện người dùng bằng Tkinter, lắng nghe tương tác click chuột, phím bấm và cập nhật hoạt ảnh (animation). Không can thiệp vào logic tính toán đường đi.
-* **Tầng Controller (`algorithms/`, `gui/control_panel.py`)**: Tiếp nhận yêu cầu tìm đường, điều phối thuật toán duyệt từng ô trên lưới, quản lý hàng đợi và thời gian trễ (delay) mô phỏng.
-* **Tầng Model (`data_manager.py`, `services/`)**: Quản lý toàn bộ dữ liệu, kiểm tra tính hợp lệ (Regex), băm mật khẩu, sinh OTP, đọc/ghi tệp tin JSON an toàn.
-* **Tầng Tích Hợp Ngoài (`email_service.py`)**: Kết nối giao thức SMTP để gửi mail OTP thực tế tới hòm thư người dùng.
+---
+
+### 1.1. `main.py` & `main_window.py` (Điều phối tổng thể)
+* **`main.py`:**
+  * Điểm khởi chạy (Entry Point) tối giản.
+  * Khởi tạo đối tượng `MainWindow()` và kích hoạt `app.mainloop()`.
+* **`main_window.py`:**
+  * Đóng vai trò là **Container trung tâm**, kết nối `GridCanvas`, `ControlPanel` và `DataManager`.
+  * Quản lý trạng thái phiên làm việc (Session) của tài khoản đang đăng nhập (hiển thị tên người dùng ở góc trên, nút Đăng xuất).
+  * Xử lý luồng chuyển cảnh: Nếu chưa đăng nhập $\rightarrow$ mở `LoginWindow`; Đăng nhập thành công $\rightarrow$ mở khóa toàn bộ tính năng mô phỏng.
 
 ---
 
-## 2. CHI TIẾT TỪNG MODULE & TỆP TIN
-
-### 2.1. `main.py`
-* **Vai trò:** Điểm khởi chạy duy nhất của chương trình khi chạy bằng Python.
-* **Nội dung:** Khởi tạo lớp `MainWindow` từ `gui.main_window` và kích hoạt vòng lặp sự kiện `app.mainloop()`.
-* **Cách giải thích trên lớp:** *"File `main.py` đóng vai trò là Entry Point tối giản, tuân thủ nguyên tắc Single Responsibility, chỉ có nhiệm vụ khởi động cửa sổ chính của ứng dụng."*
-
-### 2.2. `data_manager.py`
-Là file quan trọng nhất quản lý dữ liệu và xác thực logic:
-* **Hàm băm mật khẩu `_hash_password(password, salt)`:**
-  * Sinh một chuỗi ngẫu nhiên cryptographic salt 16 bytes bằng `os.urandom(16)`.
-  * Áp dụng thuật toán băm chuẩn ngân hàng/bảo mật cao: `hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 100000)`.
-  * Trả về cặp `(salt_hex, key_hex)` để lưu trữ vào `users.json`.
-* **Hàm xác minh mật khẩu `_verify_password(password, salt_hex, key_hex)`:**
-  * Lấy salt từ dữ liệu cũ, băm lại mật khẩu người dùng vừa nhập rồi so sánh chuỗi hash với `key_hex`.
-* **Hàm `validate_user_input(username, phone, email, password)`:**
-  * Sử dụng Regular Expression (Regex) để kiểm tra định dạng:
-    * `username`: Bắt đầu bằng chữ cái, dài từ 3-20 ký tự gồm chữ, số, gạch dưới (`^[a-zA-Z][a-zA-Z0-9_]{2,19}$`).
-    * `phone`: Đúng 10 chữ số, bắt đầu bằng số 0 (`^0[0-9]{9}$`).
-    * `email`: Chuỗi email chuẩn, thuộc các domain phổ biến (`gmail.com`, `yahoo.com`, `huit.edu.vn`,...).
-    * `password`: Tối thiểu 8 ký tự, có ít nhất 1 chữ hoa, 1 chữ thường, 1 chữ số, 1 ký tự đặc biệt (`(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])`).
-* **Hàm chống Brute-force `login(...)`:**
-  * Kiểm tra `failed_attempts`. Nếu vượt quá 5 lần sai, kích hoạt khóa tài khoản trong 5 phút (`lockout_until = datetime.now() + 5 phút`).
-* **Hàm OTP:**
-  * `generate_otp()`: Sinh số ngẫu nhiên 6 chữ số (`f"{random.randint(0, 999999):06d}"`).
-  * Gắn hạn sử dụng `expires_at = datetime.now() + timedelta(minutes=10)`.
-
-### 2.3. `email_service.py`
-* **Vai trò:** Dịch vụ gửi email thông báo mã OTP qua giao thức mạng SMTP.
-* **Công nghệ sử dụng:**
-  * Thư viện `smtplib` chuẩn của Python với chế độ bảo mật SSL (`SMTP_SSL` qua cổng 465).
-  * Máy chủ: `smtp.gmail.com`.
-  * Đọc thông tin người gửi và App Password từ file `.env` qua `python-dotenv`.
-* **Cách giải thích trên lớp:** *"Để đảm bảo an toàn thông tin, dự án không hardcode mật khẩu trong mã nguồn mà đọc biến môi trường từ tệp `.env`. Kết nối được mã hóa đường truyền SSL."*
-
-### 2.4. `algorithms/`
-* **`base_algorithm.py`:**
-  * Chứa lớp trừu tượng `BaseAlgorithm` kế thừa từ `abc.ABC`.
-  * Định nghĩa các phương thức trừu tượng bắt buộc: `initialize()`, `step()`, `find_path()`, `get_stats()`.
-  * Mọi thuật toán tìm đường (BFS, DFS, A*, Dijkstra) đều phải kế thừa từ lớp này.
-* **`grid_bfs.py`:**
-  * Cài đặt cụ thể thuật toán BFS cho lưới ô vuông 2D.
-  * Sử dụng `collections.deque` làm hàng đợi `queue` (hỗ trợ thao tác `popleft()` với độ phức tạp $O(1)$).
-  * Sử dụng từ điển `parent = {}` để lưu lại ô nút cha của từng ô, phục vụ việc truy vết đường đi ngược lại từ Đích về Start.
-  * Hỗ trợ hàm `step()`: Mỗi lần gọi sẽ mở rộng một bước tìm kiếm. Điều này cho phép giao diện Tkinter vẽ từng bước một (animation) mà không làm đơ ứng dụng.
-* **`algorithms_registry.py`:**
-  * Áp dụng **Factory Method Pattern**. Đăng ký danh sách thuật toán qua Registry dictionary.
-  * Giúp hệ thống dễ dàng bổ sung thuật toán mới trong tương lai mà không cần viết lại giao diện.
-
-### 2.5. `gui/`
-* **`main_window.py`:** Cửa sổ làm việc chính, tích hợp thanh menu, quản lý trạng thái phiên làm việc (session người dùng đăng nhập), điều phối giữa Canvas và Control Panel.
-* **`grid_canvas.py`:** Kế thừa từ `tk.Canvas`. Xử lý sự kiện chuột để vẽ tường, đổi màu ô khi thuật toán chạy, chuyển đổi qua lại giữa tọa độ pixel và chỉ số `(hàng, cột)`.
-* **`control_panel.py`:** Bảng điều khiển gồm các nút chức năng: Bắt đầu, Tạm dừng, Xóa tường, Chọn thuật toán, Thanh trượt tốc độ.
-* **`login_window.py`:** Cửa sổ chứa 3 tab: Đăng nhập, Đăng ký (nhập thông tin & OTP), Quên mật khẩu (gửi OTP khôi phục).
-* **`theme.py`:** Quản lý bảng màu Dark/Light Mode đồng bộ cho toàn bộ ứng dụng.
-
-### 2.6. `services/`
-* **`json_handler.py`:** Cung cấp hàm đọc/ghi tệp tin JSON an toàn, tự động bắt lỗi cú pháp nếu file bị hỏng hoặc chưa tồn tại.
-* **`external_service.py`:** Chứa các hàm hỗ trợ gọi dịch vụ ngoài bổ trợ.
-
-### 2.7. `test_data.py`
-* Chứa **48 ca kiểm thử tự động (Unit / Integration Tests)** được viết bằng Python thuần (không cần cài thêm pytest).
-* Kiểm tra toàn diện từ kiểm tra tính hợp lệ dữ liệu đầu vào (tên, email, số điện thoại, mật khẩu), logic đăng ký, logic băm, mã OTP, chống brute-force khóa tài khoản, đến lưu/tải bản đồ và ghi lịch sử.
-* Đạt tỷ lệ thành công tuyệt đối: **48/48 PASS (100%)**.
+### 1.2. `grid_canvas.py` (Lưới vẽ tương tác)
+* **Kế thừa:** `tk.Canvas`.
+* **Chuyển đổi tọa độ toán học $\leftrightarrow$ Tọa độ pixel màn hình:**
+  * Kích thước mỗi ô là `cell_size` (mặc định 25px đến 30px).
+  * Từ tọa độ pixel chuột $(x, y) \rightarrow$ Chỉ số ô:
+    $$\text{row} = \lfloor y / \text{cell\_size} \rfloor, \quad \text{col} = \lfloor x / \text{cell\_size} \rfloor$$
+  * Từ chỉ số ô $(\text{row}, \text{col}) \rightarrow$ Tọa độ hình chữ nhật vẽ trên Canvas:
+    $$x_1 = \text{col} \times \text{cell\_size}, \quad y_1 = \text{row} \times \text{cell\_size}$$
+    $$x_2 = x_1 + \text{cell\_size}, \quad y_2 = y_1 + \text{cell\_size}$$
+* **Xử lý sự kiện chuột (Mouse Event Binding):**
+  * `<Button-1>` & `<B1-Motion>`: Nhấn và kéo chuột trái để **Vẽ tường chướng ngại vật** liên tục.
+  * `<Button-3>` & `<B3-Motion>`: Nhấn và kéo chuột phải để **Xóa tường chướng ngại vật**.
+  * Chống vẽ đè: Kiểm tra không cho phép biến ô **Start (Bắt đầu)** và ô **Target (Đích)** thành tường.
+* **Cơ chế cập nhật màu sắc trạng thái ô:**
+  * `START`: Màu xanh lá cây (Green).
+  * `TARGET`: Màu đỏ (Red).
+  * `WALL`: Màu xám đậm / đen (Obstacle).
+  * `VISITED`: Màu xanh dương nhạt / ngọc bích (Hiển thị làn sóng đang duyệt).
+  * `PATH`: Màu vàng rực rỡ (Đường đi ngắn nhất tìm được).
 
 ---
 
-## 3. GIẢI THÍCH SÂU VỀ CÁC THUẬT TOÁN CỐT LÕI
-
-### 3.1. Thuật toán BFS (Breadth-First Search) trên Lưới 2D
-* **Nguyên lý hoạt động:**
-  1. Đưa điểm xuất phát $(S)$ vào hàng đợi `Queue` và đánh dấu đã thăm (`visited.add(S)`).
-  2. Lấy ô đầu hàng đợi ra (First-In, First-Out).
-  3. Xét 4 ô lân cận (Lên, Xuống, Trái, Phải):
-     * Nếu ô nằm trong phạm vi lưới, chưa từng thăm và không phải là tường chướng ngại vật:
-       * Đưa ô đó vào `Queue`.
-       * Đánh dấu ô đó là đã thăm.
-       * Ghi nhận quan hệ: `parent[ô_lân_cận] = ô_hiện_tại`.
-       * Nếu ô lân cận chính là Đích đến $(T)$ $\rightarrow$ Dừng thuật toán.
-  4. Lặp lại bước 2 cho đến khi hàng đợi rỗng hoặc đã tìm thấy đích.
-  5. **Truy vết đường đi ngắn nhất (Path Reconstruction):** Bắt đầu từ $T$, lần ngược theo `parent[T]`, `parent[parent[T]]` cho đến khi gặp $S$. Đảo ngược danh sách lại ta được đường đi ngắn nhất.
-* **Độ phức tạp:**
-  * Thời gian (Time Complexity): $O(V + E) = O(R \times C)$ với $R, C$ là số hàng và số cột của lưới (mỗi ô và cạnh được duyệt tối đa một lần).
-  * Không gian (Space Complexity): $O(R \times C)$ để lưu trữ `visited`, `parent` và hàng đợi `Queue`.
-* **Tính chất quan trọng:** Trên đồ thị không trọng số (mỗi bước đi có chi phí bằng 1), BFS **luôn luôn đảm bảo** tìm ra đường đi ngắn nhất với số bước ít nhất.
+### 1.3. `control_panel.py` (Bảng điều khiển & Hoạt ảnh Animation)
+* **Các nút chức năng:**
+  * **Bắt đầu tìm đường (Start):** Khởi tạo thuật toán và bắt đầu vòng lặp hoạt ảnh.
+  * **Tạm dừng / Tiếp tục (Pause/Resume):** Giữ nguyên trạng thái hàng đợi và ma trận duyệt.
+  * **Xóa tường / Làm mới (Clear Walls / Reset Grid):** Đưa lưới về trạng thái ban đầu.
+  * **Thanh trượt tốc độ (Speed Slider):** Điều chỉnh độ trễ `delay` (từ 5ms đến 100ms) giữa các bước vẽ.
+  * **Lưu / Tải bản đồ (Save/Load Map):** Mở hộp thoại nhập tên để lưu trạng thái mê cung vào CSDL JSON.
+* **⚡ Kỹ thuật hoạt ảnh không làm đơ giao diện (`root.after`):**
+  * **Vấn đề thường gặp:** Dùng vòng lặp `while True` kết hợp `time.sleep()` sẽ làm luồng giao diện (Main Thread) bị nghẽn $\rightarrow$ Cửa sổ báo "(Not Responding)", không bấm được Pause hay chuột.
+  * **Giải pháp trong code:** Sử dụng phương thức `root.after(delay_ms, self.step_animation)`. Mỗi lần chỉ tính toán và đổi màu đúng 1 bước duyệt của thuật toán, sau đó nhường quyền xử lý cho hệ điều hành vẽ màn hình, rồi hẹn lịch gọi bước tiếp theo.
 
 ---
 
-### 3.2. Thuật toán Mã hóa Mật khẩu PBKDF2
-* **Tại sao không lưu mật khẩu thô (Plaintext)?** Vì nếu file `users.json` bị lộ, toàn bộ tài khoản người dùng sẽ bị chiếm đoạt.
+### 1.4. `login_window.py` (Cửa sổ xác thực người dùng)
+* Thiết kế dạng giao diện hiện đại với **3 Tab / Chế độ:**
+  1. **Đăng nhập (Sign In):** Nhập username & password.
+  2. **Đăng ký (Sign Up):** Nhập họ tên, email, SĐT, mật khẩu $\rightarrow$ Chuyển sang màn hình nhập **mã OTP 6 số**.
+  3. **Quên mật khẩu (Forgot Password):** Nhập email nhận OTP $\rightarrow$ Nhập mật khẩu mới.
+* Tự động hiển thị nhãn lỗi màu đỏ trực quan khi nhập sai dữ liệu (Validation feedback).
+
+---
+
+### 1.5. `theme.py` (Giao diện Sáng / Tối)
+* Định nghĩa từ điển chứa bảng mã màu chuẩn: `THEMES["dark"]` và `THEMES["light"]`.
+* Khi người dùng bấm nút chuyển chế độ, hàm cập nhật sẽ duyệt qua các Widget để đổi màu nền (`bg`), màu chữ (`fg`) và vẽ lại lưới Canvas với tông màu mới.
+
+---
+
+### 💡 Câu Hỏi Thầy Cô Thường Hỏi Về Phần Giao Diện & Câu Trả Lời Mẫu
+
+* **❓ Giảng viên hỏi:** *Làm thế nào để khi người dùng rê chuột nhanh thì các ô tường được vẽ liên tục không bị đứt đoạn?*
+  * **👉 Trả lời:** *"Dạ thưa thầy/cô, em bắt sự kiện `<B1-Motion>` (vừa nhấn vừa di chuyển chuột). Trong hàm xử lý, em tính toán tọa độ `(row, col)` tức thời dưới con trỏ chuột và cập nhật ngay vào ma trận lưới. Đồng thời chỉ đổi màu các ô chưa phải là tường để tối ưu hóa hiệu năng render của Tkinter."*
+
+* **❓ Giảng viên hỏi:** *Tại sao khi thuật toán chạy vẽ hàng trăm ô mà giao diện vẫn mượt, không bị treo ứng dụng?*
+  * **👉 Trả lời:** *"Dạ thưa thầy/cô, thay vì dùng `time.sleep()` làm block Main Event Loop, em sử dụng cơ chế Non-blocking thông qua hàm `root.after()`. Mỗi tick chỉ xử lý 1 bước của thuật toán rồi trả quyền cập nhật màn hình lại cho Tkinter, nhờ đó người dùng vẫn bấm được nút Dừng hoặc tương tác bình thường."*
+
+---
+
+# 🧠 PHẦN 2: THUẬT TOÁN (TÌM ĐƯỜNG & MÔ PHỎNG LƯỚI)
+
+Phần thuật toán nằm độc lập trong thư mục `algorithms/`, được thiết kế theo đúng nguyên lý Hướng đối tượng (OOP) và mẫu thiết kế **Factory / Registry Pattern**.
+
+```text
+algorithms/
+├── base_algorithm.py       # Lớp trừu tượng khuôn mẫu (Interface)
+├── grid_bfs.py             # Cài đặt chi tiết thuật toán BFS trên lưới 2D
+└── algorithms_registry.py  # Đăng ký và quản lý các thuật toán
+```
+
+---
+
+### 2.1. `base_algorithm.py` (Khuôn mẫu lớp trừu tượng)
+* Áp dụng nguyên lý **Open/Closed Principle** trong thiết kế hướng đối tượng:
+  * Kế thừa từ `abc.ABC` (Abstract Base Class).
+  * Khai báo các phương thức trừu tượng `@abstractmethod` bắt buộc mọi thuật toán phải có:
+    * `initialize(grid, start, target)`: Thiết lập dữ liệu ban đầu.
+    * `step()`: Thực hiện duyệt đúng **một bước** (để phục vụ vẽ hoạt ảnh).
+    * `find_path()`: Trả về danh sách tọa độ các ô tạo thành đường đi ngắn nhất.
+    * `get_stats()`: Trả về các thông số (Số ô đã duyệt, độ dài đường đi, thời gian chạy).
+
+---
+
+### 2.2. `grid_bfs.py` (Thuật toán Tìm kiếm theo chiều rộng - BFS)
+
+#### A. Cấu trúc dữ liệu sử dụng:
+1. **Hàng đợi `queue = collections.deque()` (FIFO - First In, First Out):**
+   * Chứa các ô đang chờ được duyệt tiếp theo.
+   * Sử dụng `deque` để thao tác lấy phần tử đầu `popleft()` đạt độ phức tạp $O(1)$ (nếu dùng `list.pop(0)` thông thường sẽ mất $O(N)$).
+2. **Tập hợp `visited = set()`:**
+   * Lưu các tọa độ `(r, c)` đã được ghé thăm để tránh bị lặp vô tận.
+   * Tra cứu trong `set` mất thời gian $O(1)$.
+3. **Từ điển cha-con `parent = {}` (Backtracking Map):**
+   * Lưu lại ô đi trước của từng ô: `parent[neighbor] = current`.
+   * Đây là cấu trúc quan trọng nhất để **truy vết ngược lại đường đi** sau khi đã chạm tới đích.
+
+#### B. Quy tắc di chuyển 4 hướng (4-directional Movement):
+```python
+DIRECTIONS = [
+    (-1, 0),  # Lên trên (Up)
+    (1, 0),   # Xuống dưới (Down)
+    (0, -1),  # Sang trái (Left)
+    (0, 1)    # Sang phải (Right)
+]
+```
+
+#### C. Các bước thực thi thuật toán:
+1. **Khởi tạo:**
+   * Đưa điểm xuất phát $S(\text{start\_row}, \text{start\_col})$ vào `queue`.
+   * Thêm $S$ vào `visited`.
+2. **Trong mỗi bước (`step()`):**
+   * Lấy ô hiện tại `(r, c)` ra khỏi đầu hàng đợi bằng `queue.popleft()`.
+   * Nếu `(r, c) == target`: Đã tìm thấy đích! Dừng thuật toán và tiến hành truy vết.
+   * Ngược lại, xét 4 ô lân cận `(nr, nc)`:
+     * Điều kiện hợp lệ:
+       1. $0 \le nr < \text{Số hàng}$ và $0 \le nc < \text{Số cột}$ (nằm trong biên).
+       2. Lưới tại `(nr, nc)` **không phải là tường** (Not a wall).
+       3. `(nr, nc)` **chưa từng có trong `visited`**.
+     * Nếu thỏa mãn cả 3 điều kiện:
+       * Thêm `(nr, nc)` vào `visited`.
+       * Ghi nhận dấu vết: `parent[(nr, nc)] = (r, c)`.
+       * Đẩy `(nr, nc)` vào cuối hàng đợi: `queue.append((nr, nc))`.
+3. **Truy vết đường đi ngắn nhất (Reconstruct Path):**
+   * Bắt đầu từ ô Đích: `curr = target`.
+   * Chừng nào `curr in parent`:
+     * Thêm `curr` vào danh sách `path`.
+     * Lùi về ô cha: `curr = parent[curr]`.
+   * Thêm ô `start` vào cuối, sau đó đảo ngược danh sách `path.reverse()`.
+
+#### D. Độ phức tạp tính toán:
+* **Thời gian (Time Complexity):** $O(V + E)$
+  * Với lưới $R$ hàng, $C$ cột: Số đỉnh $V = R \times C$, số cạnh tối đa $E = 4 \times R \times C$.
+  * Do đó độ phức tạp là **tuyến tính $O(R \times C)$**. Mỗi ô chỉ được đưa vào hàng đợi tối đa 1 lần.
+* **Bộ nhớ (Space Complexity):** $O(R \times C)$ để lưu trữ `queue`, `visited` và `parent`.
+
+---
+
+### 2.3. `algorithms_registry.py` (Mở rộng thuật toán)
+* Quản lý danh sách các thuật toán dưới dạng từ điển `REGISTRY = {"BFS": GridBFS, ...}`.
+* **Ý nghĩa:** Khi bạn muốn thêm thuật toán **A\***, **Dijkstra** hay **DFS**, bạn chỉ cần tạo file mới kế thừa `BaseAlgorithm` rồi đăng ký 1 dòng vào đây. Giao diện sẽ tự động hiển thị tên thuật toán mới mà không cần chỉnh sửa bất kỳ dòng code GUI nào!
+
+---
+
+### 💡 Câu Hỏi Thầy Cô Thường Hỏi Về Phần Thuật Toán & Câu Trả Lời Mẫu
+
+* **❓ Giảng viên hỏi:** *Tại sao thuật toán BFS luôn đảm bảo tìm được đường đi ngắn nhất trên lưới này?*
+  * **👉 Trả lời:** *"Dạ thưa thầy/cô, trên lưới ô vuông này, khoảng cách di chuyển giữa hai ô kề nhau luôn bằng nhau (không trọng số, chi phí = 1 đơn vị). BFS hoạt động theo cơ chế hàng đợi FIFO, tức là duyệt theo từng lớp bán kính: thăm hết tất cả các ô cách điểm đầu 1 bước, rồi mới đến các ô cách 2 bước, 3 bước... Do đó, thời điểm đầu tiên thuật toán chạm đến ô Đích thì số bước đi từ điểm Bắt đầu đến ô Đích đó chắc chắn là nhỏ nhất."*
+
+* **❓ Giảng viên hỏi:** *Nếu trên lưới không có đường đi đến đích (bị tường bao kín hoàn toàn) thì thuật toán xử lý thế nào?*
+  * **👉 Trả lời:** *"Dạ thưa thầy/cô, thuật toán sẽ duyệt hết tất cả các ô có thể đi tới được. Khi hàng đợi `queue` trở nên rỗng mà vẫn chưa gặp điểm Đích, hàm `step()` sẽ trả về kết quả không tìm thấy đường đi (`NO_PATH`), giao diện sẽ hiển thị thông báo cho người dùng biết là đích đến không thể chạm tới."*
+
+* **❓ Giảng viên hỏi:** *Hàm truy vết đường đi hoạt động ra sao?*
+  * **👉 Trả lời:** *"Dạ trong quá trình duyệt, mỗi khi tìm thấy một ô lân cận hợp lệ, em lưu lại tọa độ ô đi trước vào từ điển `parent[ô_mới] = ô_hiện_tại`. Khi chạm đích, em lần ngược từ Đích về ô cha, rồi ô ông nội... cho tới khi gặp điểm Bắt đầu, sau đó đảo ngược danh sách lại là thu được lộ trình hoàn chỉnh."*
+
+---
+
+# 🔒 PHẦN 3: DỮ LIỆU & TÀI KHOẢN (BẢO MẬT, OTP & JSON)
+
+Toàn bộ phần xử lý nghiệp vụ, kiểm tra đầu vào, mã hóa mật khẩu, gửi email OTP và lưu trữ CSDL nằm trong `data_manager.py`, `email_service.py` và thư mục `data/`.
+
+```text
+source/
+├── data_manager.py      # Bộ xử lý nghiệp vụ, băm mật khẩu, chống brute-force, quản lý JSON
+├── email_service.py     # Dịch vụ gửi email OTP qua Gmail SMTP SSL (Port 465)
+├── test_data.py         # Bộ 48 ca kiểm thử tự động toàn diện
+├── services/
+│   └── json_handler.py  # Đọc/ghi JSON an toàn
+└── data/
+    ├── users.json       # Cơ sở dữ liệu tài khoản (đã mã hóa)
+    ├── maps.json        # Bản đồ người dùng lưu lại
+    └── history.json     # Lịch sử các phiên mô phỏng
+```
+
+---
+
+### 3.1. Xác Thực Dữ Liệu Đầu Vào Bằng Biểu Thức Chính Quy (Regex)
+Hàm `validate_user_input()` kiểm tra chặt chẽ tính hợp lệ trước khi cho phép đăng ký:
+* **Tên đăng nhập (Username):** `^[a-zA-Z][a-zA-Z0-9_]{2,19}$`
+  * Bắt buộc bắt đầu bằng chữ cái.
+  * Chỉ chứa chữ cái, số, gạch dưới. Độ dài từ 3 đến 20 ký tự.
+* **Số điện thoại (Phone):** `^0[0-9]{9}$`
+  * Bắt đầu bằng chữ số `0`, gồm đúng 10 chữ số chuẩn định dạng Việt Nam.
+* **Email:** Kiểm tra cú pháp chuẩn RFC và nằm trong danh sách domain hợp lệ (`gmail.com`, `yahoo.com`, `huit.edu.vn`...).
+* **Mật khẩu (Password):** `(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])`
+  * Tối thiểu 8 ký tự.
+  * Phải có ít nhất: 1 chữ hoa, 1 chữ thường, 1 chữ số và 1 ký tự đặc biệt.
+
+---
+
+### 3.2. Thuật Toán Mã Hóa Mật Khẩu Chuẩn Ngân Hàng: PBKDF2 + Salt
+Hệ thống **tuyệt đối không lưu mật khẩu thô (Plaintext)**:
+* **Cơ chế băm trong hàm `_hash_password()`:**
+  1. Mỗi tài khoản khi tạo sẽ được sinh một mã ngẫu nhiên **Salt 16 bytes** bằng hàm bảo mật của hệ điều hành: `os.urandom(16)`.
+  2. Sử dụng thuật toán:
+     ```python
+     hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 100000)
+     ```
+  3. Băm liên tục **100.000 vòng lặp** (Iterations).
 * **Tại sao không dùng MD5 hay SHA-256 thông thường?**
-  * MD5 và SHA-256 là hàm băm một chiều rất nhanh, kẻ tấn công có thể dùng bảng cầu vồng (Rainbow Table) hoặc dùng card đồ họa GPU để thử hàng tỷ mật khẩu mỗi giây.
-* **Giải pháp của dự án:** Dùng **PBKDF2-HMAC-SHA256**:
-  * Mỗi người dùng có một `salt` ngẫu nhiên 16 bytes riêng biệt, chống hoàn toàn kỹ thuật tấn công bằng Rainbow Table.
-  * Số vòng lặp băm kéo dài: `100,000` lần lặp. Thời gian tính toán cho 1 mật khẩu mất khoảng vài mili-giây đối với người dùng bình thường (không nhận thấy độ trễ), nhưng khiến kẻ tấn công mất hàng nghìn năm nếu muốn dò quét brute-force số lượng lớn.
+  * MD5 và SHA-256 tính toán cực nhanh, hacker có thể dùng card đồ họa GPU thử hàng tỷ mật khẩu mỗi giây hoặc tra bảng băm có sẵn (Rainbow Table).
+  * Với PBKDF2 + 100.000 vòng lặp kèm Salt riêng, hacker hoàn toàn bất khả thi trong việc dò quét mật khẩu hàng loạt.
 
 ---
 
-### 3.3. Cơ chế Khóa Tài Khoản Chống Tấn Công Dò Quét (Brute-Force)
-* Mỗi khi người dùng gõ sai mật khẩu, `failed_attempts` tăng thêm 1.
-* Nếu gõ sai liên tiếp 5 lần:
-  * Hệ thống tự động ghi nhận thời điểm khóa: `lockout_until = datetime.now() + 5 phút`.
-  * Trong suốt 5 phút này, dù người dùng có nhập đúng mật khẩu thì hệ thống vẫn từ chối đăng nhập và thông báo rõ thời gian còn lại cần chờ.
-* Khi người dùng nhập đúng mật khẩu trước khi bị khóa: `failed_attempts` tự động reset về 0.
+### 3.3. Cơ Chế Chống Tấn Công Dò Quét (Brute-Force Lockout)
+* Trong file `users.json`, mỗi tài khoản có trường:
+  * `failed_attempts`: Số lần gõ sai mật khẩu liên tiếp.
+  * `lockout_until`: Thời điểm hết hạn khóa tài khoản.
+* **Quy tắc:**
+  * Nếu người dùng gõ sai mật khẩu **5 lần liên tiếp** $\rightarrow$ Hệ thống tự động khóa tài khoản trong **5 phút**.
+  * Trong thời gian 5 phút này, dù có nhập đúng mật khẩu, hệ thống vẫn từ chối và báo rõ số phút còn phải chờ.
+  * Khi nhập đúng mật khẩu trước mốc 5 lần sai $\rightarrow$ Tự động reset `failed_attempts` về 0.
 
 ---
 
-### 3.4. Kỹ thuật Lưu Trữ An Toàn Atomic File Write
-Khi lưu `users.json` hoặc `maps.json`:
-* Nếu ghi đè trực tiếp lên file đang có, lỡ máy tính bị sập nguồn hoặc tắt app đột ngột đúng khoảnh khắc đó, file sẽ bị rỗng (0 bytes) và hỏng toàn bộ dữ liệu.
-* Dự án áp dụng phương pháp **Atomic Write**:
-  1. Ghi toàn bộ dữ liệu ra một file tạm: `users.json.tmp`.
-  2. Dùng lệnh `os.replace("users.json.tmp", "users.json")`. Lệnh này ở cấp hệ điều hành là một thao tác đơn nguyên (atomic operation), đảm bảo dữ liệu luôn toàn vẹn 100%, không bao giờ bị hỏng dở dang.
+### 3.4. Xác Thực Hai Lớp (OTP) Qua Gmail SMTP Thật
+* **Sinh mã OTP:** `random.randint(0, 999999)` định dạng 6 chữ số (ví dụ: `482910`).
+* **Thời hạn hiệu lực:** 10 phút (`expires_at = datetime.now() + timedelta(minutes=10)`).
+* **Gửi mail (`email_service.py`):**
+  * Sử dụng thư viện `smtplib` với kết nối bảo mật `SMTP_SSL` qua cổng **465**.
+  * Máy chủ máy chủ: `smtp.gmail.com`.
+  * Đọc thông tin người gửi và App Password từ file cấu hình bảo mật `.env` (không hardcode vào mã nguồn).
 
 ---
 
-## 4. KỊCH BẢN HỎI - ĐÁP (Q&A) VỚI GIẢNG VIÊN
+### 3.5. Lưu Trữ An Toàn Tuyệt Đối (Atomic File Write)
+* **Nguy cơ:** Khi đang ghi đè file `users.json`, nếu người dùng tắt app hoặc máy tính bị mất điện, file sẽ bị đứt đoạn, trở thành rỗng (0 bytes) và hỏng toàn bộ tài khoản.
+* **Giải pháp trong code:**
+  1. Ghi dữ liệu ra một file tạm: `users.json.tmp`.
+  2. Dùng lệnh `os.replace("users.json.tmp", "users.json")`.
+  3. Thao tác `os.replace` ở tầng nhân hệ điều hành là **thao tác đơn nguyên (Atomic)**: Hoặc là file cũ còn nguyên, hoặc là file mới được thay thế trọn vẹn, không bao giờ có trạng thái file bị hỏng dở dang.
 
-Dưới đây là các câu hỏi giảng viên hay đặt ra nhất và câu trả lời chuẩn xác giúp bạn đạt điểm tối đa:
+---
 
-### ❓ Câu 1: Em hãy giải thích tại sao thuật toán BFS luôn tìm được đường đi ngắn nhất trên lưới này?
-> **Trả lời:** Dạ thưa thầy/cô, trên lưới tọa độ này, chi phí di chuyển giữa hai ô kề nhau là như nhau (bằng 1 đơn vị, đồ thị không trọng số). Thuật toán BFS duyệt theo cơ chế vết dầu loang (lan tỏa theo từng lớp bán kính), tức là duyệt hết tất cả các ô cách điểm xuất phát 1 bước, sau đó mới duyệt các ô cách 2 bước, 3 bước... Vì vậy, ngay khoảnh khắc đầu tiên thuật toán chạm tới điểm Đích, đường đi tới ô đó chắc chắn có số bước ngắn nhất.
+### 3.6. Bộ 48 Ca Kiểm Thử Tự Động (`test_data.py`)
+Dự án tích hợp sẵn bộ kiểm thử tự động toàn diện kiểm tra 100% logic của tầng dữ liệu:
+* Ca 1 - 7: Kiểm thử định dạng Tên tài khoản.
+* Ca 8 - 11: Kiểm thử định dạng Số điện thoại.
+* Ca 12 - 17: Kiểm thử định dạng Email & tên miền.
+* Ca 18 - 20: Kiểm thử độ mạnh mật khẩu.
+* Ca 21 - 26: Kiểm thử logic Đăng ký (trùng tên, trùng mail, trùng SĐT).
+* Ca 27 - 29: Kiểm thử xác thực mã OTP.
+* Ca 30 - 34: Kiểm thử Đăng nhập & cơ chế Khóa sau 5 lần sai (Brute-force).
+* Ca 35 - 40: Kiểm thử chức năng Quên mật khẩu & cấp lại mật khẩu mới.
+* Ca 41 - 47: Kiểm thử tính toàn vẹn khi Lưu & Tải bản đồ JSON.
+* Ca 48: Kiểm thử ghi nhận lịch sử mô phỏng.
+* **Kết quả:** **48/48 ca PASS (100%)**.
 
-### ❓ Câu 2: Khi chạy mô phỏng hoạt ảnh (animation), làm sao để giao diện Tkinter không bị đơ (Not Responding)?
-> **Trả lời:** Dạ thưa thầy/cô, thay vì dùng một vòng lặp `while True` với lệnh `time.sleep()` gây tắc nghẽn luồng giao diện chính (Main GUI Thread), nhóm em đã thiết kế thuật toán theo cơ chế bước `step()`. Mỗi lần giao diện gọi `root.after(delay, run_step)`, ứng dụng chỉ tính toán và vẽ 1 bước rồi trả quyền kiểm soát lại cho Mainloop của Tkinter, sau đó hẹn lịch gọi bước tiếp theo. Nhờ vậy, người dùng vẫn có thể bấm nút Tạm dừng (Pause), Xóa hoặc kéo chuột bình thường mà không bị treo phần mềm.
+---
 
-### ❓ Câu 3: Mật khẩu người dùng được lưu trữ như thế nào trong tệp users.json?
-> **Trả lời:** Dạ thưa thầy/cô, mật khẩu hoàn toàn không được lưu ở dạng văn bản thô. Nhóm em sử dụng thuật toán PBKDF2 kết hợp HMAC-SHA256 với Salt ngẫu nhiên 16 bytes và 100.000 vòng lặp băm. Mỗi tài khoản có một mã Salt riêng biệt lưu kèm chuỗi Hash. Kể cả hai người dùng đặt cùng một mật khẩu thì chuỗi Hash lưu trong file `users.json` vẫn hoàn toàn khác nhau, ngăn chặn triệt để hình thức tấn công Rainbow Table.
+### 💡 Câu Hỏi Thầy Cô Thường Hỏi Về Dữ Liệu & Tài Khoản & Câu Trả Lời Mẫu
 
-### ❓ Câu 4: Nếu muốn thêm một thuật toán mới (ví dụ A* hoặc Dijkstra) vào dự án thì phải sửa những đâu?
-> **Trả lời:** Dạ thưa thầy/cô, dự án áp dụng nguyên lý thiết kế Open/Closed Principle và mẫu Factory Pattern. Em chỉ cần tạo một file thuật toán mới kế thừa lớp `BaseAlgorithm` trong thư mục `algorithms/`, cài đặt hàm `step()` và `find_path()`, sau đó đăng ký vào `algorithms_registry.py`. Toàn bộ giao diện người dùng, Canvas và Control Panel sẽ tự động nhận diện thuật toán mới trong menu chọn mà không cần sửa đổi bất kỳ dòng code giao diện nào.
+* **❓ Giảng viên hỏi:** *Tại sao trong file users.json mật khẩu nhìn giống một chuỗi ký tự loằng ngoằng, em có giải mã ngược lại được không?*
+  * **👉 Trả lời:** *"Dạ thưa thầy/cô, đây là hàm băm một chiều (One-way Hash Function) PBKDF2-SHA256 kết hợp mã Salt ngẫu nhiên 16 bytes. Về mặt toán học và mật mã học, hàm băm này không thể giải mã ngược lại ra mật khẩu ban đầu được. Khi người dùng đăng nhập, hệ thống sẽ lấy mật khẩu họ vừa gõ, dùng chính mã Salt cũ để băm lại, nếu hai chuỗi băm trùng nhau thì chứng tỏ mật khẩu chính xác."*
 
-### ❓ Câu 5: Em đã kiểm thử phần mềm như thế nào để chứng minh hệ thống hoạt động ổn định?
-> **Trả lời:** Dạ thưa thầy/cô, nhóm em đã xây dựng một bộ kiểm thử tự động gồm **48 ca kiểm thử (Test Cases)** trong file `test_data.py`. Bộ kiểm thử này kiểm tra toàn bộ các ca bình thường và ca biên: từ kiểm tra Regex số điện thoại, email, mật khẩu; kiểm tra trùng lặp tài khoản; kiểm tra tính năng gửi OTP; kiểm tra khóa tài khoản sau 5 lần sai mật khẩu; đến kiểm tra tính toàn vẹn của dữ liệu bản đồ JSON. Khi chạy lệnh `python test_data.py`, toàn bộ 48/48 ca đều đạt kết quả PASS tuyệt đối.
+* **❓ Giảng viên hỏi:** *Nếu người dùng nhập sai mã OTP thì mã đó có bị mất không và hết hạn sau bao lâu?*
+  * **👉 Trả lời:** *"Dạ thưa thầy/cô, mã OTP được cấu hình hết hạn sau 10 phút kể từ lúc sinh ra. Nếu nhập sai, hệ thống sẽ báo lỗi và cho phép nhập lại cho đến khi hết hạn. Khi hết hạn hoặc người dùng yêu cầu gửi lại, mã OTP cũ sẽ bị hủy và hệ thống sẽ sinh ra một mã hoàn toàn mới."*
 
+* **❓ Giảng viên hỏi:** *Dữ liệu bản đồ được lưu xuống file JSON như thế nào?*
+  * **👉 Trả lời:** *"Dạ trong file `maps.json`, mỗi bản đồ được lưu thành một đối tượng JSON gồm: ID bản đồ, Tên bản đồ, Tọa độ điểm bắt đầu `start: [r, c]`, Tọa độ điểm đích `target: [r, c]`, Kích thước lưới `[rows, cols]` và danh sách tọa độ của toàn bộ các ô tường `walls: [[r1, c1], [r2, c2], ...]`. Khi người dùng tải lại bản đồ, hệ thống chỉ cần đọc danh sách tọa độ này và gán lại lên Canvas."*
+
+---
+
+# 📊 BẢNG TỔNG KẾT NHANH ĐỂ TRẢ LỜI NHANH TRÊN LỚP
+
+| Thành phần | Công nghệ / Thuật toán | Ưu điểm cốt lõi |
+| :--- | :--- | :--- |
+| **Giao diện** | Python Tkinter, Non-blocking Canvas | Trực quan, chạy mượt không giật lag nhờ `root.after()`. |
+| **Tìm đường** | BFS (Breadth-First Search), `deque` | Đảm bảo 100% luôn tìm được đường đi ngắn nhất với $O(R \times C)$. |
+| **Mở rộng code** | OOP, Factory Method Registry | Dễ dàng thêm thuật toán mới mà không cần chạm vào code giao diện. |
+| **Mật khẩu** | PBKDF2-HMAC-SHA256, 100.000 vòng, 16B Salt | Chống Rainbow Table, chống GPU Brute-force đạt chuẩn bảo mật cao. |
+| **An toàn tài khoản** | Khóa 5 phút khi sai 5 lần | Chống tấn công dò quét mật khẩu tự động. |
+| **Xác thực** | OTP 6 số ngẫu nhiên + Gmail SMTP SSL 465 | Xác thực người dùng thật qua hòm thư điện tử. |
+| **Lưu trữ tệp** | Atomic File Write (`os.replace`) | Không bao giờ bị hỏng file dữ liệu JSON khi sập nguồn đột ngột. |
+| **Kiểm thử** | 48 Test Cases tự động (`test_data.py`) | Đạt 48/48 PASS, chứng minh phần mềm hoạt động chính xác và ổn định. |
