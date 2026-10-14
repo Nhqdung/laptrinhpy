@@ -142,7 +142,7 @@ class RegisterDialog(tk.Toplevel):
 
         self._build_ui()
         self.grab_set()
-        center_window(self, 420, 520)
+        center_window(self, 420, 550)
 
     def _build_ui(self):
         # Header
@@ -189,7 +189,7 @@ class RegisterDialog(tk.Toplevel):
 
         # Nút xác nhận
         submit_btn = ttk.Button(card, text="Tạo tài khoản", style="Primary.TButton", command=self._on_register_clicked)
-        submit_btn.pack(fill="x")
+        submit_btn.pack(fill="x", pady=(4, 12))
 
     def _on_register_clicked(self):
         username = self.username_entry.get().strip()
@@ -282,7 +282,7 @@ class ForgotPasswordDialog(tk.Toplevel):
 
         self._build_ui()
         self.grab_set()
-        center_window(self, 420, 500)
+        center_window(self, 430, 570)
 
     def _build_ui(self):
         header = tk.Frame(self, bg=COLOR_BG_CARD, padx=16, pady=12, bd=1, relief="solid")
@@ -322,7 +322,7 @@ class ForgotPasswordDialog(tk.Toplevel):
         self.new_password_entry.pack(fill="x", pady=(2, 12))
 
         reset_btn = ttk.Button(card, text="Đặt lại mật khẩu", style="Primary.TButton", command=self._reset_password)
-        reset_btn.pack(fill="x")
+        reset_btn.pack(fill="x", pady=(8, 12))
 
     def _request_otp(self):
         username = self.username_entry.get().strip()
